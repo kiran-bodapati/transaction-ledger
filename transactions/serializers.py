@@ -74,3 +74,40 @@ class TransactionSerializer(serializers.ModelSerializer):
             'status',
             'created_at'
         ]
+
+
+
+
+class TransferSerializer(serializers.Serializer):
+
+    source_account_id = serializers.UUIDField()
+
+    destination_account_id = serializers.UUIDField()
+
+    amount = serializers.DecimalField(
+        max_digits=14,
+        decimal_places=2
+    )
+
+    description = serializers.CharField(
+        required=False,
+        allow_blank=True
+    )
+
+    def validate_amount(self, value):
+
+        if value <= 0:
+            raise serializers.ValidationError(
+                "Transfer amount must be greater than zero."
+            )
+
+        return value
+
+    def validate(self, data):
+
+        if data['source_account_id'] == data['destination_account_id']:
+            raise serializers.ValidationError(
+                "Source and destination accounts cannot be the same."
+            )
+
+        return data

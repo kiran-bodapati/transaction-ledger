@@ -70,5 +70,24 @@ class Transaction(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
 
+
+
+
+
+    class Meta:
+        indexes = [
+        models.Index(fields=['user']),
+       ]
+
+
+
+    class Meta:
+      indexes = [
+        models.Index(
+            fields=['user', '-created_at'],
+            name='user_created_idx'
+        ),
+      ]
+
     def __str__(self):
         return f"{self.transaction_type} - {self.amount}"
